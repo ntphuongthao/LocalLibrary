@@ -1,6 +1,7 @@
 const Author = require('../models/author');
 const async = require("async");
 const Book = require("../models/book");
+const debug = require("debug")("author");
 const { body, validationResult } = require('express-validator');
 
 exports.author_list = (req, res) => {
@@ -29,7 +30,7 @@ exports.author_detail = (req, res) => {
         },
         (err, results) => {
           if (err) {
-            // Error in API usage.
+            debug(`Error in author_detail: ${err}`)
             return next(err);
           }
           if (results.author == null) {

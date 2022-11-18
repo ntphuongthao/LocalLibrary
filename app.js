@@ -3,9 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const compression = require("compression");
+const helmet = require("helmet");
 const mongoose = require('mongoose');
 
-const uri = 'mongodb+srv://thaonguyen:Ntpthao%401007@cluster0.o4hsfjq.mongodb.net/?retryWrites=true&w=majority';
+const local_uri = 'mongodb+srv://thaonguyen:Ntpthao%401007@cluster0.o4hsfjq.mongodb.net/?retryWrites=true&w=majority';
+const uri = process.env.MONGODB_URI || local_uri;
 
 mongoose.connect(uri, {
   useNewUrlParser: true,
@@ -22,6 +25,7 @@ var usersRouter = require('./routes/users');
 const catalogRouter = require("./routes/catalog"); 
 
 var app = express();
+app.use(helmet());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,6 +35,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
